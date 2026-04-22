@@ -1,22 +1,5 @@
 # pi05 PPO Finetune
-
-这个目录单独放 `openpi pi05` 推理后的 `PPO residual finetune` 代码，不改动原始模型结构。
-
-## 设计
-
-- 保留你原本的 `policy.infer(obs)` 基础输出
-- 在推理服务器里额外加载一个小的 `PPO residual policy`
-- residual policy 读取：
-  - 当前 `state7_axisangle`
-  - base policy 输出的 `action chunk`
-- 输出一个同 shape 的残差动作，再叠加回 base action
-
-这样做的好处是：
-
-- 不需要重写 openpi 的 flow-matching 主模型
 - PPO 部分可以单独训练、单独开关
-- 不开 PPO 时，原推理完全不受影响
-
 ## 文件
 
 - `config.py`: PPO residual 超参数
