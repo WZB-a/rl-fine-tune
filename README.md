@@ -16,20 +16,7 @@
 - `reward`
 - `done`
 
-如果你直接使用改过的 `inference_server_openpi_pi05.py` 记录日志，它会多写：
-
-- `base_policy_action7_axisangle`
-- `post_ppo_action7_axisangle`
-- `ppo_residual7_axisangle`
-- `sent_action7_axisangle`
-
-其中：
-
-- `base_policy_action7_axisangle` 是 openpi 原始输出
-- `post_ppo_action7_axisangle` 是 PPO 修正后的输出
-- `sent_action7_axisangle` 是最终发给机器人前、经过放大/安全限制后的输出
-
-做 PPO 训练时，优先使用没有安全裁剪前的 `post_ppo_action7_axisangle`。
+PPO 训练时，优先使用 `post_ppo_action7_axisangle`。
 
 ## 训练示例
 
@@ -48,7 +35,7 @@ python realworld_deploy/server/pi05_ppo_finetune/train_ppo.py \
 
 ## 推理接入
 
-启动推理服务器时加：
+启动推理服务器：
 
 ```bash
 python realworld_deploy/server/inference_server_openpi_pi05.py \
@@ -58,14 +45,4 @@ python realworld_deploy/server/inference_server_openpi_pi05.py \
   --ppo_blend 1.0
 ```
 
-也可以不用命令行，改环境变量：
 
-```bash
-export OPENPI_PI05_PPO_CHECKPOINT=/path/to/ppo_residual.pt
-export OPENPI_PI05_PPO_BLEND=0.7
-```
-
-## 说明
-
-这里参考了仓库里现有 PI RL/PPO 的裁剪目标思路，但没有直接照搬离散 token policy 的 trainer。
-原因是 `openpi pi05` 当前主干是连续动作 flow-matching 推理，不是离散 action token policy。
